@@ -1,0 +1,14 @@
+# Configuration Apple Developer
+# Copie ce fichier vers .env et remplis avec tes vraies valeurs
+
+# Team ID depuis le portail Apple Developer
+TEAM_ID="YOUR_TEAM_ID"
+
+# Service ID pour WeatherKit (Bundle ID)
+SERVICE_ID="com.example.weatherapp"
+
+# Weather Key ID depuis Certificates, Identifiers & Profiles
+WEATHER_KEY_ID="YOUR_WEATHER_KEY_ID"
+
+# Maps Key ID depuis Certificates, Identifiers & Profiles  
+MAP_KEY_ID="YOUR_MAP_KEY_ID"
