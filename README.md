@@ -42,6 +42,11 @@ pip3 install -r requirements.txt --break-system-packages
    - Remplissez vos identifiants dans `.env`
    - Placez vos certificats `.p8` dans le dossier `certificats/`
 
+4. Rendez le script de lancement exécutable :
+```bash
+chmod +x run_server.sh
+```
+
 ## Configuration
 
 ### Configuration des identifiants
@@ -67,19 +72,44 @@ SERVICE_ID=com.example.weatherapp
 
 Ajoutez le serveur à votre fichier de configuration Claude Desktop :
 
-**Sur macOS/Linux :** `~/.config/claude/mcp_server_config.json`  
-**Sur Windows :** `%APPDATA%\claude\mcp_server_config.json`
+**Sur macOS :** `~/Library/Application Support/Claude/claude_desktop_config.json`  
+**Sur Linux :** `~/.config/claude/claude_desktop_config.json`  
+**Sur Windows :** `%APPDATA%\claude\claude_desktop_config.json`
+
+#### Méthode recommandée (avec script wrapper) :
 
 ```json
 {
-  "servers": {
+  "mcpServers": {
     "apple-weather": {
-      "command": "python",
-      "args": ["/chemin/vers/votre/mcp-apple-weather/server.py"]
+      "command": "/chemin/vers/votre/mcp-apple-weather/run_server.sh"
     }
   }
 }
 ```
+
+#### Méthode alternative (directe) :
+
+```json
+{
+  "mcpServers": {
+    "apple-weather": {
+      "command": "python3",
+      "args": ["server.py"],
+      "cwd": "/chemin/vers/votre/mcp-apple-weather"
+    }
+  }
+}
+```
+
+**Note importante** : Utilisez `mcpServers` et non `servers` dans la configuration.
+
+### Redémarrage de Claude Desktop
+
+Après avoir modifié la configuration :
+1. Quittez complètement Claude Desktop (⌘+Q sur macOS)
+2. Relancez Claude Desktop
+3. L'intégration devrait apparaître dans les outils disponibles
 
 ## Utilisation
 
@@ -101,6 +131,7 @@ mcp-apple-weather/
 ├── auth.py            # Authentification JWT
 ├── utils.py           # Fonctions utilitaires
 ├── app_config.py      # Configuration
+├── run_server.sh      # Script de lancement
 ├── certificats/       # Dossier pour les certificats .p8
 ├── logs/              # Logs du serveur
 └── cache/             # Cache (futur)
@@ -110,17 +141,28 @@ mcp-apple-weather/
 
 ### Problèmes courants
 
-1. **"Certificats Apple WeatherKit manquants"**
+1. **L'intégration n'apparaît pas dans Claude Desktop**
+   - Vérifiez que vous utilisez `mcpServers` et non `servers` dans la configuration
+   - Assurez-vous que le chemin vers le script est correct et absolu
+   - Redémarrez complètement Claude Desktop
+
+2. **"Certificats Apple WeatherKit manquants"**
    - Vérifiez que vos certificats .p8 sont dans le dossier `certificats/`
    - Vérifiez les noms de fichiers dans `app_config.py`
 
-2. **"Failed to import weather module"**
+3. **"Failed to import weather module"**
    - Vérifiez que tous les fichiers Python sont présents
-   - Installez les dépendances : `pip3 install -r requirements.txt`
+   - Installez les dépendances : `pip3 install -r requirements.txt --break-system-packages`
 
-3. **Aucune donnée météo retournée**
+4. **Aucune donnée météo retournée**
    - Vérifiez vos identifiants Apple dans `.env`
    - Vérifiez que WeatherKit est activé sur votre compte Developer
+
+### Vérifier les logs
+
+Pour déboguer, consultez les logs de Claude Desktop :
+- **macOS** : `~/Library/Logs/Claude/`
+- Ou utilisez Console.app et recherchez "Claude"
 
 ## Licence
 
